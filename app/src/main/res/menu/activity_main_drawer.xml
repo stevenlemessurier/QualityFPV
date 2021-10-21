@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_flight_controller"
+            android:icon="@drawable/icon_flight_controller"
+            android:title="@string/menu_flight_controller" />
+        <item
+            android:id="@+id/nav_esc"
+            android:icon="@drawable/ic_menu_esc"
+            android:menuCategory="secondary"
+            android:title="@string/menu_esc" />
+        <item
+            android:id="@+id/nav_motor"
+            android:icon="@drawable/icon_motor"
+            android:menuCategory="secondary"
+            android:title="@string/menu_motor" />
+
+        <item
+            android:id="@+id/nav_frame"
+            android:icon="@drawable/icon_frame"
+            android:menuCategory="secondary"
+            android:title="@string/menu_frame" />
+
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/icon_camera"
+            android:title="@string/menu_camera" />
+
+        <item
+            android:id="@+id/nav_vtx"
+            android:icon="@drawable/icon_vtx"
+            android:title="@string/menu_vtx" />
+
+        <item
+            android:id="@+id/nav_antenna"
+            android:icon="@drawable/icon_antenna"
+            android:title="@string/menu_antenna" />
+
+        <item
+            android:id="@+id/nav_prop"
+            android:icon="@drawable/icon_prop"
+            android:title="@string/menu_prop" />
+
+        <item
+            android:id="@+id/nav_product"
+            android:visible="false" />
+    </group>
+</menu>

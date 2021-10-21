@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_flight_controller">
+
+    <fragment
+        android:id="@+id/nav_flight_controller"
+        android:name="com.HomeStudio.QualityFPV.nav_drawer.flight_controller.FlightControllerFragment"
+        android:label="@string/menu_flight_controller"
+        tools:layout="@layout/fragment_flight_controller" />
+
+    <fragment
+        android:id="@+id/nav_esc"
+        android:name="com.HomeStudio.QualityFPV.nav_drawer.esc.EscFragment"
+        android:label="@string/menu_esc"
+        tools:layout="@layout/fragment_esc" />
+
+    <fragment
+        android:id="@+id/nav_motor"
+        android:name="com.HomeStudio.QualityFPV.nav_drawer.motor.MotorFragment"
+        android:label="@string/menu_motor"
+        tools:layout="@layout/fragment_motor" />
+
+    <fragment
+        android:id="@+id/nav_frame"
+        android:name="com.HomeStudio.QualityFPV.nav_drawer.frame.FrameFragment"
+        android:label="@string/menu_frame"
+        tools:layout="@layout/fragment_frame" />
+
+    <fragment
+        android:id="@+id/nav_camera"
+        android:name="com.HomeStudio.QualityFPV.nav_drawer.camera.CameraFragment"
+        android:label="@string/menu_camera"
+        tools:layout="@layout/fragment_camera" />
+
+    <fragment
+        android:id="@+id/nav_vtx"
+        android:name="com.HomeStudio.QualityFPV.nav_drawer.vtx.VtxFragment"
+        android:label="@string/menu_vtx"
+        tools:layout="@layout/fragment_vtx" />
+    <fragment
+        android:id="@+id/nav_antenna"
+        android:name="com.HomeStudio.QualityFPV.nav_drawer.antenna.AntennaFragment"
+        android:label="@string/menu_antenna"
+        tools:layout="@layout/fragment_antenna" />
+    <fragment
+        android:id="@+id/nav_prop"
+        android:name="com.HomeStudio.QualityFPV.nav_drawer.prop.PropFragment"
+        android:label="@string/menu_prop"
+        tools:layout="@layout/fragment_prop" />
+
+    <fragment
+        android:id="@+id/nav_product"
+        android:name="com.HomeStudio.QualityFPV.nested_fragments.ProductFragment"
+        tools:layout="@layout/fragment_product" />
+
+</navigation>

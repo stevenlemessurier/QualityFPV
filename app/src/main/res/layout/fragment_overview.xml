@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="10dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/detail_product_images"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/prev_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/detail_product_images"
+                app:layout_constraintTop_toTopOf="@id/detail_product_images"
+                app:layout_constraintBottom_toBottomOf="@id/detail_product_images"
+                android:backgroundTint="#40454545"
+                android:paddingEnd="-3dp"
+                android:paddingBottom="100dp"
+                android:paddingTop="100dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_arrow_back"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageButton
+                android:id="@+id/next_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/detail_product_images"
+                app:layout_constraintTop_toTopOf="@id/detail_product_images"
+                app:layout_constraintBottom_toBottomOf="@id/detail_product_images"
+                android:backgroundTint="#40454545"
+                android:paddingEnd="-3dp"
+                android:paddingBottom="100dp"
+                android:paddingTop="100dp"
+                android:rotation="180"
+                android:visibility="gone"
+                android:src="@drawable/ic_arrow_back"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/detail_product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:visibility="gone"
+                android:hint="Product Name"
+                android:layout_margin="10dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_product_images" />
+
+            <TextView
+                android:id="@+id/detail_product_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="gone"
+                android:hint="Product Details"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_product_name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/product_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="15dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_web" />
+
+    <ProgressBar
+        android:id="@+id/product_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleLarge"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

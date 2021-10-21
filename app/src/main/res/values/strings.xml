@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">QualityFPV</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_flight_controller">Flight Controllers</string>
+    <string name="menu_esc">ESCs</string>
+    <string name="menu_motor">Motors</string>
+    <string name="menu_frame">Frames</string>
+    <string name="menu_camera">Cameras</string>
+    <string name="menu_vtx">VTXs</string>
+    <string name="menu_antenna">Antennas</string>
+    <string name="menu_prop">Props</string>
+</resources>
