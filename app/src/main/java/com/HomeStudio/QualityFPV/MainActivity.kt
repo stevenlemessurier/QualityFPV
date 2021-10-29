@@ -1,12 +1,18 @@
 package com.HomeStudio.QualityFPV
 
+import android.content.ClipData
+import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Filter
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -17,12 +23,14 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.HomeStudio.QualityFPV.data.Product
 import com.HomeStudio.QualityFPV.data.ProductViewModel
 import com.HomeStudio.QualityFPV.nested_fragments.ProductFragment
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import java.lang.Exception
 
 
@@ -33,10 +41,24 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
     private var mToolBarNavigationListenerIsRegister: Boolean = false
     private lateinit var mProductViewModel: ProductViewModel
+    private lateinit var mSiteSelectorViewModel: SiteSelectorViewModel
     private lateinit var product: Product
+    var currentSite = "Pyro Drone"
     var productOpen = false
     private var savedState: Bundle? = null
     lateinit var appInfo: ApplicationInfo
+
+    class MyAdapter(context: Context, val items: List<String>)
+        : ArrayAdapter<String>(context, R.layout.dropdown_website_item, items) {
+
+        private val noOpFilter = object : Filter() {
+            private val noOpResult = FilterResults()
+            override fun performFiltering(constraint: CharSequence?) = noOpResult
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {}
+        }
+
+        override fun getFilter() = noOpFilter
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +69,37 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         setContentView(R.layout.activity_main)
 
         mProductViewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
+        mSiteSelectorViewModel = ViewModelProvider(this).get(SiteSelectorViewModel::class.java)
 
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         drawerLayout = findViewById(R.id.drawer_layout)
 
+
+        val siteList = listOf("Pyro Drone", "GetFpv", "RaceDayQuads")
+        navView.getHeaderView(0).autoCompleteTextView.apply {
+            setAdapter(MyAdapter(applicationContext, siteList))
+            setText("Pyro Drone", false)
+        }
+
+        navView.getHeaderView(0).autoCompleteTextView.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, position, _ ->
+                currentSite = siteList[position]
+                when (currentSite) {
+                    "Pyro Drone" -> {
+                        navView.getHeaderView(0).imageView.setImageResource(R.drawable.pyrodrone)
+                        mSiteSelectorViewModel.setWebsite("Pyro Drone")
+                    }
+                    "GetFpv" -> {
+                        navView.getHeaderView(0).imageView.setImageResource(R.drawable.getfpv_logo_original)
+                        mSiteSelectorViewModel.setWebsite("GetFpv")
+                    }
+                    "RaceDayQuads" -> {
+                        navView.getHeaderView(0).imageView.setImageResource(R.drawable.racedayquads_logo)
+                        mSiteSelectorViewModel.setWebsite("RaceDayQuads")
+                    }
+                }
+            }
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -65,6 +113,8 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         toggleHamburgerUpButton()
 
         appInfo = applicationContext.packageManager.getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
+
+
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -90,6 +140,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
 
     override fun onPause() {
         super.onPause()
+
         val intent: Boolean
         if (supportFragmentManager.backStackEntryCount > 0){
             val frag = supportFragmentManager.findFragmentByTag("tag") as ProductFragment

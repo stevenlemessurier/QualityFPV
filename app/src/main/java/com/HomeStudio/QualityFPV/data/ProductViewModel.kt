@@ -27,16 +27,16 @@ class ProductViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun readAllProductType(type: String): LiveData<List<Product>> {
-        return repository.readAllProductType(type).asLiveData()
+    fun readAllProductType(type: String, site: String): LiveData<List<Product>> {
+        return repository.readAllProductType(type, site).asLiveData()
     }
 
     fun getAllProductNames(): LiveData<List<String>> {
         return repository.getAllProductNames().asLiveData()
     }
 
-    fun getProduct(type: String): LiveData<Product> {
-        return repository.getProduct(type).asLiveData()
+    fun getProduct(type: String, site: String): LiveData<Product> {
+        return repository.getProduct(type, site).asLiveData()
     }
 
     fun deleteProducts(type: String){

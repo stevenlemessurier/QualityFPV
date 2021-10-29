@@ -11,16 +11,16 @@ class ProductRepository(private val productDao: ProductDao) {
         productDao.addProduct(product)
     }
 
-    fun readAllProductType(type: String): Flow<List<Product>> {
-        return productDao.readAllProductType(type)
+    fun readAllProductType(type: String, site: String): Flow<List<Product>> {
+        return productDao.readAllProductType(type, site)
     }
 
     fun getAllProductNames(): Flow<List<String>> {
         return productDao.getAllProductNames()
     }
 
-    fun getProduct(type: String): Flow<Product> {
-        return productDao.getProduct(type)
+    fun getProduct(type: String, site: String): Flow<Product> {
+        return productDao.getProduct(type, site)
     }
 
     fun deleteProducts(type: String){

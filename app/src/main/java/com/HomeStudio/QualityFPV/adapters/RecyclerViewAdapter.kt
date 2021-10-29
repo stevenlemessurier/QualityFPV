@@ -1,5 +1,6 @@
 package com.HomeStudio.QualityFPV.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,12 +30,14 @@ class RecyclerViewAdapter(private val mProductViewModel: ProductViewModel) :
             .inflate(R.layout.adapter_product_item, parent, false))
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = productList[position]
         holder.itemView.product_name.text = currentItem.name
         holder.itemView.product_price.text = currentItem.price
-        holder.itemView.rating.text = currentItem.rating.toString()
+//        holder.itemView.rating.text = currentItem.rating.toString()
         Glide.with(holder.itemView).load(currentItem.img).into(holder.itemView.product_image)
+        holder.itemView.rating_badge_text.text = "#${(position+1)}"
 
         holder.itemView.product_card.setOnClickListener {
             val activity = context as AppCompatActivity
@@ -46,6 +49,7 @@ class RecyclerViewAdapter(private val mProductViewModel: ProductViewModel) :
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(product: List<Product>) {
         this.productList = product
         notifyDataSetChanged()

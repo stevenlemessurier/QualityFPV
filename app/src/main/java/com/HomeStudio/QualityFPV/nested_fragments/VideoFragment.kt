@@ -62,7 +62,7 @@ class VideoFragment: Fragment() {
         val progress = root.findViewById<CardView>(R.id.video_progress_card)
 
         val apiKey =  (activity as MainActivity).appInfo.metaData["keyValue"].toString()
-        val urlName = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q="+product.name.replace(
+        val urlName = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q="+product.name.replace(
             " ",
             "+"
         )+"&type=video&key="+apiKey
@@ -76,7 +76,8 @@ class VideoFragment: Fragment() {
                 .replace("</head>", "")
                 .replace("<body>", "")
                 .replace("</body>", "")
-                .replace("</html>", ""))
+                .replace("</html", "")
+                .replace(">", ""))
 
             val itemsArray = jsonOuter.getJSONArray("items")
 

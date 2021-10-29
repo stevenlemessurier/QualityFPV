@@ -17,15 +17,15 @@ interface ProductDao {
     @Query("SELECT * FROM product_table")
     fun readAllData(): LiveData<List<Product>>
 
-    @Query("SELECT * FROM product_table WHERE product_type = :type ORDER BY rating DESC")
-    fun readAllProductType(type: String): Flow<List<Product>>
+    @Query("SELECT * FROM product_table WHERE product_type = :type AND website = :site ORDER BY rating DESC")
+    fun readAllProductType(type: String, site: String): Flow<List<Product>>
 
     @Query("SELECT name FROM product_table")
     fun getAllProductNames(): Flow<List<String>>
 
     // Used to check for Existing products of type
-    @Query("SELECT * FROM product_table WHERE product_type = :type LIMIT 1")
-    fun getProduct(type: String): Flow<Product>
+    @Query("SELECT * FROM product_table WHERE product_type = :type AND website = :site LIMIT 1")
+    fun getProduct(type: String, site: String): Flow<Product>
 
     @Query("DELETE FROM product_table WHERE product_type = :type")
     fun deleteProducts(type: String)

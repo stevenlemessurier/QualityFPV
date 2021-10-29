@@ -8,10 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.HomeStudio.QualityFPV.MainActivity
 import com.HomeStudio.QualityFPV.R
+import com.HomeStudio.QualityFPV.SiteSelectorViewModel
 import com.HomeStudio.QualityFPV.adapters.RecyclerViewAdapter
 import com.HomeStudio.QualityFPV.data.Product
 import com.HomeStudio.QualityFPV.data.ProductDatabase
@@ -26,56 +30,38 @@ import kotlin.random.Random
 
 class FlightControllerFragment : ScrapingFragment() {
 
-
     private lateinit var flightControllerViewModel: FlightControllerViewModel
+    private lateinit var mSiteSelectorViewModel: SiteSelectorViewModel
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
-            flightControllerViewModel =
-                ViewModelProvider(this).get(FlightControllerViewModel::class.java)
+        flightControllerViewModel =
+            ViewModelProvider(this).get(FlightControllerViewModel::class.java)
+        mSiteSelectorViewModel =
+            ViewModelProvider(activity as MainActivity).get(SiteSelectorViewModel::class.java)
 
-            val root = inflater.inflate(R.layout.fragment_flight_controller, container, false)
-            val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view_flight_controller)
+        val root = inflater.inflate(R.layout.fragment_flight_controller, container, false)
+        val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view_flight_controller)
+        if (mSiteSelectorViewModel.initialValue.value == false){
+            getProducts("flight-controllers", recyclerView, "Pyro Drone")
+            mSiteSelectorViewModel.setInitialVal(true)
+        }
 
-            getPyroProducts("flight-controllers", recyclerView)
 
+        mSiteSelectorViewModel.website.observe(viewLifecycleOwner, {
+            if (this.isVisible) {
+                when (it) {
+                    "Pyro Drone" -> getProducts("flight-controllers", recyclerView, it)
+                    "GetFpv" -> Log.d("out", "Switched to GetFpv")
+                    "RaceDayQuads" -> Log.d("out", "Switched to RaceDayQuads")
+                }
+            }
+        })
 
-//        mProductViewModel.getProduct("flight-controllers").observe(viewLifecycleOwner, {
-//            if(it == null){
-//                doAsync {
-//                    val productList = getPyroProducts("flight-controllers")
-//
-//                    for (i in 0..9) {
-//                        mProductViewModel.addProduct(productList[i])
-//                    }
-//                }
-//            }
-//        })
-//
-//        doAsync {
-//            if (activity != null) {
-//                uiThread {
-//                    val productRecyclerViewAdapter = RecyclerViewAdapter(mProductViewModel)
-//                    val productLinearLayoutManager = LinearLayoutManager(
-//                        activity,
-//                        LinearLayoutManager.VERTICAL,
-//                        false
-//                    )
-//
-//                    mProductViewModel.readAllProductType("flight-controllers").observe(viewLifecycleOwner, { product ->
-//                            productRecyclerViewAdapter.setData(product)
-//                        })
-//
-//                    recyclerView.layoutManager = productLinearLayoutManager
-//                    recyclerView.adapter = productRecyclerViewAdapter
-//                }
-//            }
-//        }
-
-            return root
+        return root
     }
 }

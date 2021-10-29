@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.HomeStudio.QualityFPV.R
+import com.HomeStudio.QualityFPV.adapters.DescriptionImageAdapter
 import com.HomeStudio.QualityFPV.adapters.DetailImageAdapter
 import com.HomeStudio.QualityFPV.data.Product
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -56,6 +57,7 @@ class OverviewFragment: Fragment() {
         val productDetails = root.findViewById<TextView>(R.id.detail_product_details)
         val progressBar = root.findViewById<ProgressBar>(R.id.product_progress_bar)
         val images = root.findViewById<RecyclerView>(R.id.detail_product_images)
+        val prodDescImages = root.findViewById<RecyclerView>(R.id.product_details_images)
         val prevButton = root.findViewById<ImageButton>(R.id.prev_button)
         val nextButton = root.findViewById<ImageButton>(R.id.next_button)
         val fab = root.findViewById<FloatingActionButton>(R.id.product_fab)
@@ -65,42 +67,45 @@ class OverviewFragment: Fragment() {
         }
 
         doAsync {
-            val doc = Jsoup.connect(product.url).get()
-
-            val all = doc.getElementsByClass("product-description")[0].select("p, li, h2, h3")
-            var htmlDetails = parseDetails(all)
 
             lateinit var detailImages: Elements
             val imgList = mutableListOf<String>()
+            val descriptionImages = mutableListOf<String>()
+            lateinit var htmlDetails: String
 
-            if (all.isEmpty()) {
-                val newAll = doc.getElementsByClass("product-description")[0].html()
+            if(product.website == "Pyro Drone"){
 
-                htmlDetails = Html.fromHtml(newAll).toString()
-            }
-//
-//            val descripImages = doc.getElementById("tab1").getElementsByTag("img")
-//            for (image in descripImages)
-//                descriptionImages.add(image.attr("src").toString())
-//
-//            val descripVideos = doc.getElementById("tab1").getElementsByTag("iframe")
-//            for (video in descripVideos) {
-//                var videoUri = video.attr("src").toString()
-//
-//                if (videoUri.length > 11) {
-//                    videoUri = videoUri.substring(videoUri.length - 11, videoUri.length)
-//                    descriptionVideos.add(videoUri)
-//                }
-//            }
-//
-            detailImages = doc.getElementsByClass("text-link")
-            for (img in detailImages)
-                imgList.add("https:${img.attr("href")}")
+                val doc = Jsoup.connect(product.url).get()
 
-            if (imgList.isEmpty()) {
-                detailImages = doc.getElementsByClass("prod-large-img")
+                val all = doc.getElementsByClass("product-description")[0].select("p, li, h2, h3")
+                htmlDetails = parseDetails(all)
+                if (all.isEmpty()) {
+                    val newAll = doc.getElementsByClass("product-description")[0].html()
+
+                    htmlDetails = Html.fromHtml(newAll).toString()
+                }
+
+                val descripImages = doc.getElementById("tab1").getElementsByTag("img")
+                for (image in descripImages)
+                    descriptionImages.add(image.attr("src").toString())
+
+                detailImages = doc.getElementsByClass("text-link")
                 for (img in detailImages)
-                    imgList.add("https:${img.getElementsByTag("img").attr("src")}")
+                    imgList.add("https:${img.attr("href")}")
+
+                if (imgList.isEmpty()) {
+                    detailImages = doc.getElementsByClass("prod-large-img")
+                    for (img in detailImages)
+                        imgList.add("https:${img.getElementsByTag("img").attr("src")}")
+                }
+            }
+
+            else if(product.website == "GetFpv"){
+                val k = 9
+            }
+
+            else if(product.website == "RaceDayQuads"){
+                val f = 0
             }
 
 //            val cost = "$" + doc.getElementsByAttributeValue(
@@ -114,6 +119,15 @@ class OverviewFragment: Fragment() {
                     productDetails.text = "No Description"
                 else
                     productDetails.text = htmlDetails
+
+                val detailImageRecyclerViewAdapter = DescriptionImageAdapter(descriptionImages)
+                val detailImageLinearLayoutManager = LinearLayoutManager(
+                    activity,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
+                prodDescImages.adapter = detailImageRecyclerViewAdapter
+                prodDescImages.layoutManager = detailImageLinearLayoutManager
 
                 //Setup RecyclerView
                 val detailRecyclerViewAdapter = DetailImageAdapter(imgList)
