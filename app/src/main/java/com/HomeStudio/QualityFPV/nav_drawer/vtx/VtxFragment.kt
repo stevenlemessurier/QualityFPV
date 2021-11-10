@@ -35,9 +35,9 @@ class VtxFragment : ScrapingFragment() {
         mSiteSelectorViewModel.website.observe(viewLifecycleOwner, {
             if(this.isVisible) {
                 when (it) {
-                    "Pyro Drone" -> getProducts("analog-vtx", recyclerView, it)
-                    "GetFpv" -> Log.d("out", "Switched to GetFpv")
-                    "RaceDayQuads" -> Log.d("out", "Switched to RaceDayQuads")
+                    "Pyro Drone" -> getProducts("analog-vtx", recyclerView, it, 9.99)
+                    "GetFpv" -> getProducts("fpv/video-transmitters", recyclerView, it, 9.99)
+                    "RaceDayQuads" -> getProducts("all-video-transmitters", recyclerView, it, 9.99)
                 }
             }
         })

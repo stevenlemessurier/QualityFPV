@@ -1,5 +1,7 @@
 package com.HomeStudio.QualityFPV.nav_drawer.flight_controller
 
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
@@ -7,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -25,6 +28,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import java.lang.Exception
+import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -46,8 +50,11 @@ class FlightControllerFragment : ScrapingFragment() {
 
         val root = inflater.inflate(R.layout.fragment_flight_controller, container, false)
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view_flight_controller)
+
+
+
         if (mSiteSelectorViewModel.initialValue.value == false){
-            getProducts("flight-controllers", recyclerView, "Pyro Drone")
+            getProducts("flight-controllers", recyclerView, "Pyro Drone", 19.99)
             mSiteSelectorViewModel.setInitialVal(true)
         }
 
@@ -55,9 +62,9 @@ class FlightControllerFragment : ScrapingFragment() {
         mSiteSelectorViewModel.website.observe(viewLifecycleOwner, {
             if (this.isVisible) {
                 when (it) {
-                    "Pyro Drone" -> getProducts("flight-controllers", recyclerView, it)
-                    "GetFpv" -> Log.d("out", "Switched to GetFpv")
-                    "RaceDayQuads" -> Log.d("out", "Switched to RaceDayQuads")
+                    "Pyro Drone" -> getProducts("flight-controllers", recyclerView, it, 19.99)
+                    "GetFpv" -> getProducts("electronics/flight-controllers", recyclerView, it, 19.99)
+                    "RaceDayQuads" -> getProducts("all-flight-controllers", recyclerView, it, 19.99)
                 }
             }
         })

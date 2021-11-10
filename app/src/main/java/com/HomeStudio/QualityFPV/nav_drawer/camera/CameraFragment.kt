@@ -32,9 +32,9 @@ class CameraFragment : ScrapingFragment() {
         mSiteSelectorViewModel.website.observe(viewLifecycleOwner, {
             if(this.isVisible) {
                 when (it) {
-                    "Pyro Drone" -> getProducts("cameras-and-accessories", recyclerView, it)
-                    "GetFpv" -> Log.d("out", "Switched to GetFpv")
-                    "RaceDayQuads" -> Log.d("out", "Switched to RaceDayQuads")
+                    "Pyro Drone" -> getProducts("cameras-and-accessories", recyclerView, it, 13.99)
+                    "GetFpv" -> getProducts("fpv/cameras/flight-cameras", recyclerView, it, 13.99)
+                    "RaceDayQuads" -> getProducts("fpv-cameras", recyclerView, it, 13.99)
                 }
             }
         })

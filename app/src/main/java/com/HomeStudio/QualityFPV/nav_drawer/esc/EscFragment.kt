@@ -33,9 +33,9 @@ class EscFragment : ScrapingFragment() {
         mSiteSelectorViewModel.website.observe(viewLifecycleOwner, {
             if(this.isVisible) {
                 when (it) {
-                    "Pyro Drone" -> getProducts("electronic-speed-controllers", recyclerView, it)
-                    "GetFpv" -> Log.d("out", "Switched to GetFpv")
-                    "RaceDayQuads" -> Log.d("out", "Switched to RaceDayQuads")
+                    "Pyro Drone" -> getProducts("electronic-speed-controllers", recyclerView, it, 12.99)
+                    "GetFpv" -> getProducts("electronics/electronic-speed-controllers-esc", recyclerView, it, 12.99)
+                    "RaceDayQuads" -> getProducts("all-escs", recyclerView, it, 12.99)
                 }
             }
         })

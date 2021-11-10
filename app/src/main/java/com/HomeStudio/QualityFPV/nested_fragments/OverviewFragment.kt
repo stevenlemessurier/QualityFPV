@@ -73,39 +73,70 @@ class OverviewFragment: Fragment() {
             val descriptionImages = mutableListOf<String>()
             lateinit var htmlDetails: String
 
-            if(product.website == "Pyro Drone"){
+            val doc = Jsoup.connect(product.url).get()
 
-                val doc = Jsoup.connect(product.url).get()
+            when(product.website) {
 
-                val all = doc.getElementsByClass("product-description")[0].select("p, li, h2, h3")
-                htmlDetails = parseDetails(all)
-                if (all.isEmpty()) {
-                    val newAll = doc.getElementsByClass("product-description")[0].html()
+                "Pyro Drone" -> {
 
-                    htmlDetails = Html.fromHtml(newAll).toString()
-                }
+                    val all = doc.getElementsByClass("product-description")[0].select("p, li, h2, h3")
+                    htmlDetails = parseDetails(all)
+                    if (all.isEmpty()) {
+                        val newAll = doc.getElementsByClass("product-description")[0].html()
 
-                val descripImages = doc.getElementById("tab1").getElementsByTag("img")
-                for (image in descripImages)
-                    descriptionImages.add(image.attr("src").toString())
+                        htmlDetails = Html.fromHtml(newAll).toString()
+                    }
 
-                detailImages = doc.getElementsByClass("text-link")
-                for (img in detailImages)
-                    imgList.add("https:${img.attr("href")}")
+                    val descripImages = doc.getElementById("tab1").getElementsByTag("img")
+                    for (image in descripImages)
+                        descriptionImages.add(image.attr("src").toString())
 
-                if (imgList.isEmpty()) {
-                    detailImages = doc.getElementsByClass("prod-large-img")
+                    detailImages = doc.getElementsByClass("text-link")
                     for (img in detailImages)
-                        imgList.add("https:${img.getElementsByTag("img").attr("src")}")
+                        imgList.add("https:${img.attr("href")}")
+
+                    if (imgList.isEmpty()) {
+                        detailImages = doc.getElementsByClass("prod-large-img")
+                        for (img in detailImages)
+                            imgList.add("https:${img.getElementsByTag("img").attr("src")}")
+                    }
                 }
-            }
 
-            else if(product.website == "GetFpv"){
-                val k = 9
-            }
+                "GetFpv" -> {
 
-            else if(product.website == "RaceDayQuads"){
-                val f = 0
+                    val all = doc.getElementsByClass("std")[1].select("p, li, h2, h3")
+                    htmlDetails = parseDetails(all)
+
+                    val descripImages =
+                        doc.getElementById("collateral-tabs").getElementsByTag("img")
+                    for (image in descripImages) {
+                        descriptionImages.add(image.attr("src").toString())
+                    }
+
+                    detailImages = doc.getElementsByClass("thumb-link")
+                    for (img in detailImages)
+                        imgList.add(img.attr("href"))
+                }
+
+                "RaceDayQuads" -> {
+                    val all = doc.getElementById("tabs-2").select("p, span, li, h3, h2")
+                    htmlDetails = parseDetails(all)
+
+                    val descripImages = doc.getElementById("tabs-2").getElementsByTag("img")
+                    for (image in descripImages) {
+                        descriptionImages.add(image.attr("src").toString())
+                    }
+
+                    val detailIm = doc.getElementsByClass("product-gallery--thumbnail-trigger")
+                    for (img in detailIm) {
+                        imgList.add(
+                            "https:${img.getElementsByTag("img").attr("src")}".replace(
+                                "47x47",
+                                "992x992"
+                            )
+                        )
+                    }
+                }
             }
 
 //            val cost = "$" + doc.getElementsByAttributeValue(

@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -51,7 +53,7 @@ open class ScrapingFragment: Fragment() {
     private var pageNumber = 2
     private var prevPage = 1
     private lateinit var website: String
-
+    private var minPrice by Delegates.notNull<Double>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,18 +99,10 @@ open class ScrapingFragment: Fragment() {
                                     "text-m"
                                 )[0].text().dropLast(7).toDouble()
                             else 0.0),
-                            "https://pyrodrone.com".plus(
-                                product.getElementsByTag("a").attr("href")
-                            ),
+                            "https://pyrodrone.com".plus(product.getElementsByTag("a").attr("href")),
                             website
                         )
                     )
-                    if (product.getElementsByClass("yotpo-bottomline").text().length > 1)
-                        Log.d(
-                            "out",
-                            product.getElementsByClass("yotpo-bottomline")[0].getElementsByClass("text-m")[0].text()
-                                .dropLast(7)
-                        )
                 }
 
                 if (doc.getElementsByClass("next").isNotEmpty()) {
@@ -122,9 +116,19 @@ open class ScrapingFragment: Fragment() {
                         it.rating
                     }
 
-                    for (j in 0..9) {
-                        mProductViewModel.addProduct(productList[j])
+                    var prodCount = 0
+                    var i = 0
+                    while(prodCount < 10 ){
+                        val product = productList[i].price.substring(1, productList[i].price.lastIndex)
+                        if(product.toDouble() > minPrice) {
+                            mProductViewModel.addProduct(productList[i])
+                            prodCount++
+                            i++
+                        }
+                        else
+                            i++
                     }
+
                     doAsync {
                         uiThread {
                             (activity as MainActivity).toggleProgressBar(false)
@@ -134,17 +138,160 @@ open class ScrapingFragment: Fragment() {
             }
 
             else if(website == "GetFpv"){
+                val doc = Jsoup.parse(html)
+                val allInfo = doc.getElementsByClass("item")
 
+                for (i in allInfo) {
+
+                    val highResSrc = i.getElementsByTag("img").attr("src")
+                        .replace("small_image/20x", "image")
+
+                    productList.add(
+                        Product(
+                            i.getElementsByClass("product-name").text(),
+                            productType,
+                            highResSrc,
+                            (if (i.getElementsByClass("price").size > 1)
+                                i.getElementsByClass("price")[1].text()
+                            else i.getElementsByClass("price").text()),
+                            (if (i.getElementsByClass("yotpo-bottomline").text().length > 1)
+                                i.getElementsByClass("yotpo-bottomline").text()
+                                    .substring(0, 3)
+                                    .toDouble() * i.getElementsByClass("yotpo-bottomline")[0].getElementsByClass(
+                                    "text-m"
+                                )[0].text().dropLast(7).toDouble()
+                            else 0.0),
+                            i.getElementsByTag("a").attr("href"),
+                            website
+                        )
+                    )
+                }
+
+                if (doc.getElementsByClass("next").isNotEmpty()) {
+                    Log.d("out", "Found next")
+                    Log.d("out", productList.size.toString())
+                    pageNumber++
+                }
+                else {
+                    Log.d("out", productList.size.toString())
+                    productList = productList.distinct().toMutableList()
+                    productList.sortByDescending {
+                        it.rating
+                    }
+
+                    var prodCount = 0
+                    var i = 0
+                    while(prodCount < 10 ){
+                        val product = productList[i].price.substring(1, productList[i].price.lastIndex)
+                        if(product.toDouble() > minPrice) {
+                            mProductViewModel.addProduct(productList[i])
+                            prodCount++
+                            i++
+                        }
+                        else
+                            i++
+                    }
+
+                    doAsync {
+                        uiThread {
+                            (activity as MainActivity).toggleProgressBar(false)
+                        }
+                    }
+                }
             }
 
             else if(website == "RaceDayQuads"){
 
+                val doc = Jsoup.parse(html)
+                val allInfo = doc.getElementsByClass("productgrid--item")
+
+                Log.d("out", doc.html())
+
+                for (i in allInfo) {
+                    Log.d("out", "item ${i.elementSiblingIndex()}")
+                    productList.add(
+                        Product(
+                            i.getElementsByClass("productitem--title").text(),
+                            productType,
+                            "https:".plus(i.getElementsByTag("img")[0].attr("src")),
+                            (if(i.getElementsByClass("money").size > 1)
+                                i.getElementsByClass("money")[1].text()
+                            else
+                                i.getElementsByClass("money").text()) ,
+                            (if (i.getElementsByClass("yotpo-bottomline").text().length > 1)
+                                i.getElementsByClass("yotpo-bottomline").text()
+                                    .substring(0, 3)
+                                    .toDouble() * i.getElementsByClass("yotpo-bottomline")[0].getElementsByClass(
+                                    "text-m"
+                                )[0].text().dropLast(7).toDouble()
+                            else 0.0),
+                            "https://racedayquads.com".plus(i.getElementsByTag("a").attr("href")),
+                            website
+                        )
+                    )
+
+
+                }
+
+                if (doc.getElementsByClass("pagination--next").isNotEmpty()) {
+                    Log.d("out", "Found next")
+                    Log.d("out", productList.size.toString())
+                    pageNumber++
+                } else {
+                    Log.d("out", productList.size.toString())
+                    productList = productList.distinct().toMutableList()
+
+
+                    var prodCount = 0
+                    var i = 0
+                    while(prodCount < 10 ){
+                        val product = productList[i].price.substring(1, productList[i].price.lastIndex)
+                        if(product.toDouble() > minPrice) {
+                            mProductViewModel.addProduct(productList[i])
+                            prodCount++
+                            i++
+                        }
+                        else
+                            i++
+                    }
+
+                    doAsync {
+                        uiThread {
+                            (activity as MainActivity).toggleProgressBar(false)
+                        }
+                    }
+                }
             }
         }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun getProducts(productType: String, recyclerView: RecyclerView, site: String){
+    fun getProducts(productType: String, recyclerView: RecyclerView, site: String, min: Double){
+
+        when(site){
+            "Pyro Drone" -> doAsync {
+                uiThread {
+                    recyclerView.background = resources.getDrawable(R.drawable.background_pyrodrone)
+                }
+            }
+
+            "GetFpv" ->
+                doAsync {
+                    uiThread {
+                        recyclerView.background = resources.getDrawable(R.drawable.background_getfpv)
+                    }
+                }
+
+            "RaceDayQuads" -> doAsync {
+                uiThread {
+                    recyclerView.background = resources.getDrawable(R.drawable.background_rdq)
+                }
+            }
+        }
+        prevPage = 1
+        pageNumber = 2
+        productList.clear()
+        minPrice = min
 
         website = site
         Log.d("out", website)
@@ -189,7 +336,11 @@ open class ScrapingFragment: Fragment() {
                 if(pageNumber > prevPage) {
                     prevPage++
                     Log.d("out", "Loading page $pageNumber")
-                    browser.loadUrl("https://pyrodrone.com/collections/$productType?page=$pageNumber")
+                    when(site) {
+                        "Pyro Drone" -> browser.loadUrl ("https://pyrodrone.com/collections/$productType?page=$pageNumber")
+                        "GetFpv" -> browser.loadUrl ("https://www.getfpv.com/$productType.html?limit=100&p=$pageNumber")
+                        "RaceDayQuads" -> browser.loadUrl("https://www.racedayquads.com/collections/$productType?page=$pageNumber&sort_by=best-selling")
+                    }
                     (activity as MainActivity).toggleProgressBar(true)
                 }
             }
@@ -202,7 +353,11 @@ open class ScrapingFragment: Fragment() {
                         (activity as MainActivity).toggleProgressBar(true)
                     }
                 }
-                browser.loadUrl("https://pyrodrone.com/collections/$productType?page=1")
+                when(site) {
+                    "Pyro Drone" -> browser.loadUrl ("https://pyrodrone.com/collections/$productType?page=1")
+                    "GetFpv" -> browser.loadUrl ("https://www.getfpv.com/$productType.html?limit=100&p=1")
+                    "RaceDayQuads" -> browser.loadUrl("https://www.racedayquads.com/collections/$productType?page=1&sort_by=best-selling")
+                }
                 Log.d("out", "Loading Url")
                 (activity as MainActivity).setProgressText("Loading page $prevPage")
             }
@@ -254,12 +409,6 @@ open class ScrapingFragment: Fragment() {
                         mProductViewModel.deleteProducts(prodType)
                     }
                 }
-
-                mProductViewModel.getProduct(prodType, website).observe(viewLifecycleOwner, {
-                    if (it == null) {
-                        getProducts(prodType, recycView, website)
-                    }
-                })
                 true
             }
 

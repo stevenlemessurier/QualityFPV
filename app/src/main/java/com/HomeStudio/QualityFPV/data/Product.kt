@@ -2,17 +2,19 @@ package com.HomeStudio.QualityFPV.data
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "product_table")
+@Entity(primaryKeys = ["url", "product_type"], tableName = "product_table")
 data class Product(
-    @PrimaryKey
     var name: String = "Product Name",
+    @ColumnInfo
     var product_type: String,
     var img: String,
     var price: String,
     var rating: Double,
+    @ColumnInfo
     var url: String,
     var website: String
 

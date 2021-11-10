@@ -1,18 +1,17 @@
 package com.HomeStudio.QualityFPV
 
-import android.content.ClipData
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Filter
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -23,7 +22,6 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.HomeStudio.QualityFPV.data.Product
@@ -31,7 +29,8 @@ import com.HomeStudio.QualityFPV.data.ProductViewModel
 import com.HomeStudio.QualityFPV.nested_fragments.ProductFragment
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import java.lang.Exception
+import java.lang.Integer.max
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener {
@@ -88,14 +87,17 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
                 when (currentSite) {
                     "Pyro Drone" -> {
                         navView.getHeaderView(0).imageView.setImageResource(R.drawable.pyrodrone)
+                        navView.getHeaderView(0).headerBackground.setBackgroundResource(R.drawable.background_nav_bar_pyro)
                         mSiteSelectorViewModel.setWebsite("Pyro Drone")
                     }
                     "GetFpv" -> {
                         navView.getHeaderView(0).imageView.setImageResource(R.drawable.getfpv_logo_original)
+                        navView.getHeaderView(0).headerBackground.setBackgroundResource(R.drawable.background_nav_bar_getfpv)
                         mSiteSelectorViewModel.setWebsite("GetFpv")
                     }
                     "RaceDayQuads" -> {
                         navView.getHeaderView(0).imageView.setImageResource(R.drawable.racedayquads_logo)
+                        navView.getHeaderView(0).headerBackground.setBackgroundResource(R.drawable.background_nav_bar_rdq)
                         mSiteSelectorViewModel.setWebsite("RaceDayQuads")
                     }
                 }
@@ -113,8 +115,6 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         toggleHamburgerUpButton()
 
         appInfo = applicationContext.packageManager.getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
-
-
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

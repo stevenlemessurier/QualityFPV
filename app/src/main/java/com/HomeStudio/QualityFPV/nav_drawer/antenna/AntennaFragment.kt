@@ -38,9 +38,9 @@ class AntennaFragment : ScrapingFragment() {
         mSiteSelectorViewModel.website.observe(viewLifecycleOwner, {
             if(this.isVisible) {
                 when (it) {
-                    "Pyro Drone" -> getProducts("fpv-antennas", recyclerView, it)
-                    "GetFpv" -> Log.d("out", "Switched to GetFpv")
-                    "RaceDayQuads" -> Log.d("out", "Switched to RaceDayQuads")
+                    "Pyro Drone" -> getProducts("fpv-antennas", recyclerView, it, 0.0)
+                    "GetFpv" -> getProducts("fpv/antennas", recyclerView, it, 0.0)
+                    "RaceDayQuads" -> getProducts("video-transmitter-vtx-antennas", recyclerView, it, 0.0)
                 }
             }
         })

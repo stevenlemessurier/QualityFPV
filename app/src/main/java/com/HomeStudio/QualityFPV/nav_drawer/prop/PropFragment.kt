@@ -35,9 +35,9 @@ class PropFragment : ScrapingFragment() {
         mSiteSelectorViewModel.website.observe(viewLifecycleOwner, {
             if(this.isVisible) {
                 when (it) {
-                    "Pyro Drone" -> getProducts("all-props/5", recyclerView, it)
-                    "GetFpv" -> Log.d("out", "Switched to GetFpv")
-                    "RaceDayQuads" -> Log.d("out", "Switched to RaceDayQuads")
+                    "Pyro Drone" -> getProducts("all-props/5", recyclerView, it, 0.0)
+                    "GetFpv" -> getProducts("propellers/mini-quad-propellers", recyclerView, it, 0.0)
+                    "RaceDayQuads" -> getProducts("5-props", recyclerView, it, 0.0)
                 }
             }
         })

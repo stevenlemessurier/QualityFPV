@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_getfpv.xml" value="0.2713541666666667" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_nav_bar_getfpv.xml" value="0.2713541666666667" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_nav_bar_pyro.xml" value="0.2713541666666667" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_nav_bar_rdq.xml" value="0.2713541666666667" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_pyrodrone.xml" value="0.2713541666666667" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_rdq.xml" value="0.2713541666666667" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/drawer_image_shape.xml" value="0.27239583333333334" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/items_nav_header.xml" value="0.2755208333333333" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/side_nav_bar.xml" value="0.2755208333333333" />
@@ -17,6 +23,7 @@
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/content_main.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/dropdown_website_item.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_antenna.xml" value="0.259375" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_flight_controller.xml" value="0.2552083333333333" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_overview.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_video.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/items_nav_header.xml" value="0.25625" />
