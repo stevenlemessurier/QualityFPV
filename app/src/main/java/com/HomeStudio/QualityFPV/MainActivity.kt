@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.HomeStudio.QualityFPV.data.Product
 import com.HomeStudio.QualityFPV.data.ProductViewModel
 import com.HomeStudio.QualityFPV.nested_fragments.ProductFragment
@@ -79,6 +80,24 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         navView.getHeaderView(0).autoCompleteTextView.apply {
             setAdapter(MyAdapter(applicationContext, siteList))
             setText("Pyro Drone", false)
+        }
+
+        when(mSiteSelectorViewModel.website.value){
+            "Pyro Drone" -> {
+                navView.getHeaderView(0).imageView.setImageResource(R.drawable.pyrodrone)
+                navView.getHeaderView(0).headerBackground.setBackgroundResource(R.drawable.background_nav_bar_pyro)
+                mSiteSelectorViewModel.setWebsite("Pyro Drone")
+            }
+            "GetFpv" -> {
+                navView.getHeaderView(0).imageView.setImageResource(R.drawable.getfpv_logo_original)
+                navView.getHeaderView(0).headerBackground.setBackgroundResource(R.drawable.background_nav_bar_getfpv)
+                mSiteSelectorViewModel.setWebsite("GetFpv")
+            }
+            "RaceDayQuads" -> {
+                navView.getHeaderView(0).imageView.setImageResource(R.drawable.racedayquads_logo)
+                navView.getHeaderView(0).headerBackground.setBackgroundResource(R.drawable.background_nav_bar_rdq)
+                mSiteSelectorViewModel.setWebsite("RaceDayQuads")
+            }
         }
 
         navView.getHeaderView(0).autoCompleteTextView.onItemClickListener =

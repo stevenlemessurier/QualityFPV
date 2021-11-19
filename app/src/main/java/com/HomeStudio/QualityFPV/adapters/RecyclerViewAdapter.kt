@@ -35,7 +35,6 @@ class RecyclerViewAdapter(private val mProductViewModel: ProductViewModel) :
         val currentItem = productList[position]
         holder.itemView.product_name.text = currentItem.name
         holder.itemView.product_price.text = currentItem.price
-//        holder.itemView.rating.text = currentItem.rating.toString()
         Glide.with(holder.itemView).load(currentItem.img).into(holder.itemView.product_image)
         holder.itemView.rating_badge_text.text = "#${(position+1)}"
 

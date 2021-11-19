@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.HomeStudio.QualityFPV.FilterViewModel
 import com.HomeStudio.QualityFPV.MainActivity
 import com.HomeStudio.QualityFPV.R
 import com.HomeStudio.QualityFPV.adapters.RecyclerViewAdapter
@@ -46,14 +47,16 @@ import kotlin.properties.Delegates
 open class ScrapingFragment: Fragment() {
 
     private lateinit var mProductViewModel: ProductViewModel
+    private lateinit var mFilterViewModel: FilterViewModel
     private var productList: MutableList<Product> = mutableListOf()
     private lateinit var browser: WebView
-    private lateinit var prodType: String
+    lateinit var prodType: String
     private lateinit var recycView: RecyclerView
     private var pageNumber = 2
     private var prevPage = 1
     private lateinit var website: String
     private var minPrice by Delegates.notNull<Double>()
+    private var maxPrice by Delegates.notNull<Double>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +73,10 @@ open class ScrapingFragment: Fragment() {
         fun showHTML(html: String) {
 
             mProductViewModel = ViewModelProvider(this@ScrapingFragment).get(ProductViewModel::class.java)
+            mFilterViewModel = ViewModelProvider(activity as MainActivity).get(FilterViewModel::class.java)
+
+            minPrice = mFilterViewModel.min.value?.toDouble() ?: 0.0
+            maxPrice = mFilterViewModel.max.value?.toDouble() ?: 10000.0
 
             Log.d("out", "Starting parse")
 
@@ -120,7 +127,7 @@ open class ScrapingFragment: Fragment() {
                     var i = 0
                     while(prodCount < 10 ){
                         val product = productList[i].price.substring(1, productList[i].price.lastIndex)
-                        if(product.toDouble() > minPrice) {
+                        if(product.toDouble() > minPrice && product.toDouble() < maxPrice) {
                             mProductViewModel.addProduct(productList[i])
                             prodCount++
                             i++
@@ -183,7 +190,7 @@ open class ScrapingFragment: Fragment() {
                     var i = 0
                     while(prodCount < 10 ){
                         val product = productList[i].price.substring(1, productList[i].price.lastIndex)
-                        if(product.toDouble() > minPrice) {
+                        if(product.toDouble() > minPrice && product.toDouble() < maxPrice) {
                             mProductViewModel.addProduct(productList[i])
                             prodCount++
                             i++
@@ -246,7 +253,7 @@ open class ScrapingFragment: Fragment() {
                     var i = 0
                     while(prodCount < 10 ){
                         val product = productList[i].price.substring(1, productList[i].price.lastIndex)
-                        if(product.toDouble() > minPrice) {
+                        if(product.toDouble() > minPrice && product.toDouble() < maxPrice) {
                             mProductViewModel.addProduct(productList[i])
                             prodCount++
                             i++
@@ -266,8 +273,9 @@ open class ScrapingFragment: Fragment() {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun getProducts(productType: String, recyclerView: RecyclerView, site: String, min: Double){
+    fun getProducts(productType: String, recyclerView: RecyclerView, site: String){
 
+        mFilterViewModel = ViewModelProvider(activity as MainActivity).get(FilterViewModel::class.java)
         when(site){
             "Pyro Drone" -> doAsync {
                 uiThread {
@@ -291,7 +299,6 @@ open class ScrapingFragment: Fragment() {
         prevPage = 1
         pageNumber = 2
         productList.clear()
-        minPrice = min
 
         website = site
         Log.d("out", website)
@@ -305,7 +312,8 @@ open class ScrapingFragment: Fragment() {
             setLayerType(View.LAYER_TYPE_NONE, null)
             settings.javaScriptEnabled = true
             settings.blockNetworkImage = true
-            settings.domStorageEnabled = false
+            settings.domStorageEnabled = true
+            settings.allowUniversalAccessFromFileURLs
             settings.cacheMode = WebSettings.LOAD_NO_CACHE
             settings.loadsImagesAutomatically = false
             settings.setGeolocationEnabled(false)
@@ -331,8 +339,6 @@ open class ScrapingFragment: Fragment() {
                 browser.evaluateJavascript("javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');",null)
                 Log.d("out", "page loaded")
 
-
-
                 if(pageNumber > prevPage) {
                     prevPage++
                     Log.d("out", "Loading page $pageNumber")
@@ -346,6 +352,18 @@ open class ScrapingFragment: Fragment() {
             }
         }
 
+        mFilterViewModel.change.observe(viewLifecycleOwner, {
+            if(it) {
+                productList = mutableListOf()
+                mFilterViewModel.setChange(false)
+                doAsync {
+                    uiThread {
+                        mProductViewModel.deleteProducts(prodType)
+                    }
+                }
+            }
+        })
+
         mProductViewModel.getProduct(productType, website).observe(viewLifecycleOwner, {
             if (it == null) {
                 doAsync {
@@ -353,12 +371,14 @@ open class ScrapingFragment: Fragment() {
                         (activity as MainActivity).toggleProgressBar(true)
                     }
                 }
+                prevPage = 1
+                pageNumber = 2
                 when(site) {
                     "Pyro Drone" -> browser.loadUrl ("https://pyrodrone.com/collections/$productType?page=1")
                     "GetFpv" -> browser.loadUrl ("https://www.getfpv.com/$productType.html?limit=100&p=1")
                     "RaceDayQuads" -> browser.loadUrl("https://www.racedayquads.com/collections/$productType?page=1&sort_by=best-selling")
                 }
-                Log.d("out", "Loading Url")
+                Log.d("out", "Loading Url from getProduct observer $prevPage $pageNumber")
                 (activity as MainActivity).setProgressText("Loading page $prevPage")
             }
             else
@@ -370,12 +390,27 @@ open class ScrapingFragment: Fragment() {
         doAsync {
             if (activity != null) {
                 uiThread {
-                    val productRecyclerViewAdapter = RecyclerViewAdapter(mProductViewModel)
-                    val productLinearLayoutManager = LinearLayoutManager(
-                        activity,
-                        LinearLayoutManager.VERTICAL,
-                        false
-                    )
+                    lateinit var  productRecyclerViewAdapter: RecyclerViewAdapter
+                    lateinit var productLinearLayoutManager: LinearLayoutManager
+
+                    when(resources.configuration.orientation) {
+                        Configuration.ORIENTATION_LANDSCAPE -> {
+                            productRecyclerViewAdapter = RecyclerViewAdapter(mProductViewModel)
+                            productLinearLayoutManager = LinearLayoutManager(
+                                activity,
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+                        }
+                        Configuration.ORIENTATION_PORTRAIT -> {
+                            productRecyclerViewAdapter = RecyclerViewAdapter(mProductViewModel)
+                            productLinearLayoutManager = LinearLayoutManager(
+                                activity,
+                                LinearLayoutManager.VERTICAL,
+                                false
+                            )
+                        }
+                    }
 
                     mProductViewModel.readAllProductType(productType, website).observe(
                         viewLifecycleOwner,

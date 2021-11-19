@@ -1,33 +1,18 @@
 package com.HomeStudio.QualityFPV.nested_fragments
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.HomeStudio.QualityFPV.R
-import com.HomeStudio.QualityFPV.adapters.DetailImageAdapter
 import com.HomeStudio.QualityFPV.adapters.ViewPagerAdapter
 import com.HomeStudio.QualityFPV.data.Product
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_product.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 
 class ProductFragment: Fragment() {
 

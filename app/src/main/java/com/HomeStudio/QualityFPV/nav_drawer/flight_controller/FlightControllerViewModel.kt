@@ -6,8 +6,4 @@ import androidx.lifecycle.ViewModel
 
 class FlightControllerViewModel : ViewModel() {
 
-//    private val _text = MutableLiveData<String>().apply {
-//        value = "This is the Flight Controller Fragment"
-//    }
-//    val text: LiveData<String> = _text
 }

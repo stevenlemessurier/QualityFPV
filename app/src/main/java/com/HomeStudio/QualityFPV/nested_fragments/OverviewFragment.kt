@@ -1,6 +1,8 @@
 package com.HomeStudio.QualityFPV.nested_fragments
 
+import android.animation.LayoutTransition
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -20,6 +23,7 @@ import com.HomeStudio.QualityFPV.adapters.DescriptionImageAdapter
 import com.HomeStudio.QualityFPV.adapters.DetailImageAdapter
 import com.HomeStudio.QualityFPV.data.Product
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.fragment_product.*
 import org.jetbrains.anko.doAsync
