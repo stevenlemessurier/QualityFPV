@@ -1,24 +1,15 @@
 package com.HomeStudio.QualityFPV.nav_drawer
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.webkit.*
-import android.widget.ImageButton
-import android.widget.ProgressBar
-import android.widget.Toolbar
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,17 +20,14 @@ import com.HomeStudio.QualityFPV.R
 import com.HomeStudio.QualityFPV.adapters.RecyclerViewAdapter
 import com.HomeStudio.QualityFPV.data.Product
 import com.HomeStudio.QualityFPV.data.ProductViewModel
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.content_main.view.*
-import kotlinx.coroutines.flow.callbackFlow
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.util.*
-import kotlin.concurrent.thread
 import kotlin.properties.Delegates
 
 
@@ -65,13 +53,15 @@ open class ScrapingFragment: Fragment() {
         Log.d("out", "Scraping Fragment Opening")
     }
 
-
+    // Used to get Javascript data from websites such as product ratings
     private inner class JSHtmlInterface(context: Context,
         val productType: String) {
 
+        // Pulls and scrapes the html from each website for top 10 rated products in a category and pushes them into the Room Database
         @JavascriptInterface
         fun showHTML(html: String) {
 
+            // Initialize instances of product view model and filter view model to manage products and the filter prices
             mProductViewModel = ViewModelProvider(this@ScrapingFragment).get(ProductViewModel::class.java)
             mFilterViewModel = ViewModelProvider(activity as MainActivity).get(FilterViewModel::class.java)
 
@@ -211,8 +201,6 @@ open class ScrapingFragment: Fragment() {
 
                 val doc = Jsoup.parse(html)
                 val allInfo = doc.getElementsByClass("productgrid--item")
-
-                Log.d("out", doc.html())
 
                 for (i in allInfo) {
                     Log.d("out", "item ${i.elementSiblingIndex()}")

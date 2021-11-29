@@ -1,39 +1,14 @@
 package com.HomeStudio.QualityFPV.nav_drawer.flight_controller
 
-import android.app.AlertDialog
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Parcel
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.annotation.UiThread
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.HomeStudio.QualityFPV.*
-import com.HomeStudio.QualityFPV.adapters.RecyclerViewAdapter
-import com.HomeStudio.QualityFPV.data.Product
-import com.HomeStudio.QualityFPV.data.ProductDatabase
-import com.HomeStudio.QualityFPV.data.ProductViewModel
 import com.HomeStudio.QualityFPV.nav_drawer.ScrapingFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.nav_header_main.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import org.jsoup.Jsoup
-import java.lang.Exception
-import kotlin.math.max
-import kotlin.math.roundToInt
-import kotlin.random.Random
 
 class FlightControllerFragment : ScrapingFragment() {
 

@@ -14,7 +14,7 @@
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/side_nav_bar.xml" value="0.2755208333333333" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/tab_color_state.xml" value="0.2755208333333333" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout-land/adapter_product_images.xml" value="0.21604938271604937" />
-        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout-land/adapter_product_item.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout-land/adapter_product_item.xml" value="0.6666666666666666" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout-land/fragment_flight_controller.xml" value="0.21604938271604937" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout-land/fragment_overview.xml" value="0.21604938271604937" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/activity_main.xml" value="0.259375" />
@@ -25,6 +25,7 @@
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/adapter_product_videos.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/app_bar_main.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/content_main.xml" value="0.259375" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/dailog_fragment_login.xml" value="0.2515625" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/dialog_fragment_filter.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/dropdown_website_item.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_antenna.xml" value="0.259375" />

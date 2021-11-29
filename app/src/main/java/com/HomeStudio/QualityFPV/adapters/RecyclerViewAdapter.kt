@@ -1,19 +1,28 @@
 package com.HomeStudio.QualityFPV.adapters
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.findFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.HomeStudio.QualityFPV.*
 import com.bumptech.glide.Glide
-import com.HomeStudio.QualityFPV.R
 import com.HomeStudio.QualityFPV.data.Product
 import com.HomeStudio.QualityFPV.data.ProductViewModel
 import com.HomeStudio.QualityFPV.nested_fragments.ProductFragment
 import kotlinx.android.synthetic.main.adapter_product_item.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import org.jsoup.Connection
+import org.jsoup.Jsoup
 
 class RecyclerViewAdapter(private val mProductViewModel: ProductViewModel) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
@@ -21,6 +30,7 @@ class RecyclerViewAdapter(private val mProductViewModel: ProductViewModel) :
     private var productList = listOf<Product>()
     private lateinit var context: Context
     private lateinit var parent: ViewGroup
+    private lateinit var mSiteSelectorViewModel: SiteSelectorViewModel
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -46,6 +56,10 @@ class RecyclerViewAdapter(private val mProductViewModel: ProductViewModel) :
             productFragment.arguments = bundle
             activity.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, productFragment,"tag").addToBackStack("product").commit()
         }
+
+        holder.itemView.add_to_cart.setOnClickListener{
+            login(currentItem.url)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -56,6 +70,12 @@ class RecyclerViewAdapter(private val mProductViewModel: ProductViewModel) :
 
     override fun getItemCount(): Int {
         return productList.size
+    }
+
+    private fun login(productUrl: String){
+        val loginDialog = LoginDialogFragment(productUrl)
+        val activity = context as MainActivity
+        loginDialog.show(activity.supportFragmentManager, null)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
