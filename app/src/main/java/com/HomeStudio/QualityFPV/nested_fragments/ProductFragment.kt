@@ -10,18 +10,21 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.HomeStudio.QualityFPV.R
 import com.HomeStudio.QualityFPV.adapters.ViewPagerAdapter
-import com.HomeStudio.QualityFPV.data.Product
+import com.HomeStudio.QualityFPV.data.product.Product
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+// A wrapper fragment for product overview, reviews, and video fragments
 class ProductFragment: Fragment() {
 
     lateinit var product: Product
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
+        // Get product data passed in or saved on orientation change
         if(savedInstanceState != null)
             product = savedInstanceState.getParcelable<Product>("productData") as Product
 
@@ -30,21 +33,17 @@ class ProductFragment: Fragment() {
             if(bundle != null)
                 product = bundle.getParcelable<Product>("productData") as Product
         }
-
-        Log.d("out", "Product Fragment opening")
     }
 
 
-
+    // Save product data on orientation change
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable("productData", product)
         super.onSaveInstanceState(outState)
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
 
+    // Setup tab layout and view pager for child fragments
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,

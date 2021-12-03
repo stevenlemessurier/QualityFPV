@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:backgroundTint="#CEFFFFFF"
+    android:layout_marginVertical="5dp"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
@@ -124,6 +125,33 @@
             android:textStyle="bold|italic" />
 
     </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/item_type_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/purple_700"
+        app:layout_constraintStart_toStartOf="@id/product_card"
+        app:layout_constraintEnd_toStartOf="@id/product_card"
+        app:layout_constraintTop_toTopOf="@id/product_card"
+        app:layout_constraintBottom_toTopOf="@id/product_card"
+        android:paddingHorizontal="10dp"
+        app:cardCornerRadius="20dp"
+        android:visibility="gone"
+        tools:ignore="NotSibling">
+
+        <TextView
+            android:id="@+id/item_type_badge_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_gravity="center"
+            android:textSize="26sp"
+            android:textColor="@color/white"
+            android:textStyle="bold|italic" />
+
+    </androidx.cardview.widget.CardView>
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"

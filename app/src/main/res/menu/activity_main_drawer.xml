@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/top">
         <item
             android:id="@+id/nav_flight_controller"
             android:icon="@drawable/icon_flight_controller"
@@ -11,18 +13,15 @@
         <item
             android:id="@+id/nav_esc"
             android:icon="@drawable/ic_menu_esc"
-            android:menuCategory="secondary"
             android:title="@string/menu_esc" />
         <item
             android:id="@+id/nav_motor"
             android:icon="@drawable/icon_motor"
-            android:menuCategory="secondary"
             android:title="@string/menu_motor" />
 
         <item
             android:id="@+id/nav_frame"
             android:icon="@drawable/icon_frame"
-            android:menuCategory="secondary"
             android:title="@string/menu_frame" />
 
         <item
@@ -48,5 +47,16 @@
         <item
             android:id="@+id/nav_product"
             android:visible="false" />
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/bottom">
+
+        <item
+            android:id="@+id/nav_drone"
+            android:icon="@drawable/ic_star_full"
+            android:title="Ideal Drone" />
+
     </group>
 </menu>

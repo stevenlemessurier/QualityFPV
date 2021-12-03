@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -18,32 +17,29 @@ import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.HomeStudio.QualityFPV.MainActivity
 import com.HomeStudio.QualityFPV.R
-import com.HomeStudio.QualityFPV.adapters.RecyclerViewAdapter
 import com.HomeStudio.QualityFPV.adapters.ReviewAdapter
-import com.HomeStudio.QualityFPV.data.Product
-import com.HomeStudio.QualityFPV.data.ProductViewModel
+import com.HomeStudio.QualityFPV.data.product.Product
 import com.HomeStudio.QualityFPV.data.Review
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 
+// This fragment displays reviews of a product passed in by scraping the product page
 open class ReviewsFragment: Fragment() {
 
     private lateinit var product: Product
     private lateinit var browser: WebView
 
 
+    // Scrape javascript html of product page since reviews are loaded onto page through javascript
     private inner class JSHtmlInterface(context: Context, val recyclerView: RecyclerView, val progressCard: CardView) {
         @JavascriptInterface
         fun showHTML(html: String) {
 
-            //Log.d("out", "Starting parse")
             val doc = Jsoup.parse(html)
             val elements: Elements = doc.getElementsByClass("yotpo-review")
             val reviewList = mutableListOf<Review>()
@@ -57,7 +53,6 @@ open class ReviewsFragment: Fragment() {
                 }
 
                 i++
-                //Log.d("out", "Item number $i")
 
                 val reviewTitle = review.getElementsByClass("content-title")[0].text()
                 val reviewDetails = review.getElementsByClass("content-review")[0].text()
@@ -71,13 +66,9 @@ open class ReviewsFragment: Fragment() {
                     reviewDate)
 
                 reviewList.add(newReview)
-
-                //Log.d("out", newReview.toString())
             }
 
-            //Log.d("out", "${reviewList.size} reviews found")
-
-
+            // Load and display recycler view items with list of reviews scraped
             doAsync {
                 if (activity != null) {
                     uiThread {
@@ -97,10 +88,12 @@ open class ReviewsFragment: Fragment() {
         }
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
+        // Get product data passed in or saved on orientation change
         if (savedInstanceState != null)
             product = savedInstanceState.getParcelable<Product>("productData") as Product
         else {
@@ -109,6 +102,7 @@ open class ReviewsFragment: Fragment() {
                 product = bundle.getParcelable<Product>("productData") as Product
         }
     }
+
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
@@ -122,6 +116,7 @@ open class ReviewsFragment: Fragment() {
         val recyclerView = root.findViewById<RecyclerView>(R.id.reviews_recyclerview)
         val progress = root.findViewById<CardView>(R.id.revie_progress_card)
 
+        // Setup webview to load javascript and scrape from
         browser = WebView(requireContext())
         browser.apply {
             visibility = View.INVISIBLE
@@ -140,16 +135,17 @@ open class ReviewsFragment: Fragment() {
 
         browser.webViewClient = object: WebViewClient() {
 
+            // Show progress wheel while loading page
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                Log.d("out", "Starting page")
                 progress.visibility = View.VISIBLE
                 super.onPageStarted(view, url, favicon)
             }
 
+
+            // Scrape html page for reviews after javascript data has been loaded
             @RequiresApi(Build.VERSION_CODES.KITKAT)
             override fun onPageFinished(view: WebView?, url: String?) {
                 browser.evaluateJavascript("javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');",null)
-                Log.d("out", "page loaded")
             }
         }
 
@@ -158,6 +154,8 @@ open class ReviewsFragment: Fragment() {
         return root
     }
 
+
+    // Hides refresh button in app bar
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.refresh).isVisible = false
         super.onPrepareOptionsMenu(menu)

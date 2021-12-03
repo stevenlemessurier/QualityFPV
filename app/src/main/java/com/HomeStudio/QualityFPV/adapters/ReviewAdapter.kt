@@ -1,31 +1,22 @@
 package com.HomeStudio.QualityFPV.adapters
 
 import android.content.Context
-import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.HomeStudio.QualityFPV.R
-import com.HomeStudio.QualityFPV.data.Product
-import com.HomeStudio.QualityFPV.data.ProductViewModel
 import com.HomeStudio.QualityFPV.data.Review
-import com.HomeStudio.QualityFPV.nested_fragments.ProductFragment
-import kotlinx.android.synthetic.main.adapter_product_item.view.*
 import kotlinx.android.synthetic.main.adapter_product_reviews.view.*
 
+// The adapter for a recycler view of reviews of a specific product
 class ReviewAdapter(private val reviewList: MutableList<Review>) :
     RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     private lateinit var context: Context
-    private lateinit var parent: ViewGroup
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        this.parent = parent
         return ViewHolder(LayoutInflater
             .from(parent.context)
             .inflate(R.layout.adapter_product_reviews, parent, false))
@@ -37,6 +28,7 @@ class ReviewAdapter(private val reviewList: MutableList<Review>) :
         holder.itemView.review_details.text = currentItem.reviewDetails
         holder.itemView.review_date.text = currentItem.reviewDate
 
+        // Show number of stars based on review rating
         when (currentItem.reviewScore) {
             4.0 -> holder.itemView.star5.visibility = View.GONE
             3.0 -> {

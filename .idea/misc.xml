@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_getfpv.xml" value="0.2713541666666667" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_ideal_drone.xml" value="0.2677083333333333" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_nav_bar_getfpv.xml" value="0.2713541666666667" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_nav_bar_pyro.xml" value="0.2713541666666667" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/drawable/background_nav_bar_rdq.xml" value="0.2713541666666667" />
@@ -33,6 +34,7 @@
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_esc.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_flight_controller.xml" value="0.2552083333333333" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_frame.xml" value="0.259375" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_ideal_drone.xml" value="0.2515625" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_motor.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_overview.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/fragment_prop.xml" value="0.259375" />
@@ -42,6 +44,8 @@
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/layout/nav_header_main.xml" value="0.5" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/menu/activity_main_drawer.xml" value="0.259375" />
         <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/menu/main.xml" value="0.259375" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/steve/AndroidStudioProjects/QualityFPV/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2755208333333333" />
       </map>
     </option>
   </component>

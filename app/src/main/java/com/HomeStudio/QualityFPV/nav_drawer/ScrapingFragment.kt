@@ -14,12 +14,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.HomeStudio.QualityFPV.FilterViewModel
+import com.HomeStudio.QualityFPV.data.FilterViewModel
 import com.HomeStudio.QualityFPV.MainActivity
 import com.HomeStudio.QualityFPV.R
 import com.HomeStudio.QualityFPV.adapters.RecyclerViewAdapter
-import com.HomeStudio.QualityFPV.data.Product
-import com.HomeStudio.QualityFPV.data.ProductViewModel
+import com.HomeStudio.QualityFPV.data.product.Product
+import com.HomeStudio.QualityFPV.data.product.ProductViewModel
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.content_main.view.*
@@ -30,7 +30,7 @@ import org.jsoup.select.Elements
 import java.util.*
 import kotlin.properties.Delegates
 
-
+// Parent fragment that holds logic for scraping webpages for product data
 @SuppressLint("SetJavaScriptEnabled")
 open class ScrapingFragment: Fragment() {
 
@@ -50,7 +50,6 @@ open class ScrapingFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        Log.d("out", "Scraping Fragment Opening")
     }
 
     // Used to get Javascript data from websites such as product ratings
@@ -79,10 +78,12 @@ open class ScrapingFragment: Fragment() {
                     i++
                     Log.d("out", "Item number $i")
 
+                    // Get correct sized image to display
                     var highResSrc = product.getElementsByTag("img")[0].attr("src")
                         .replace("200x.jpg", "740x.jpg")
                     highResSrc = highResSrc.replace("200x.png", "740x.png")
 
+                    // Parse page for product data and add product object to list to pass to recycler view
                     productList.add(
                         Product(
                             product.getElementsByClass("grid-view-item__title")[0].text(),
@@ -102,19 +103,19 @@ open class ScrapingFragment: Fragment() {
                     )
                 }
 
+                // If there are more pages to parse, continue loading/scraping pages otherwise sort products collected by rating and send to recycler view
                 if (doc.getElementsByClass("next").isNotEmpty()) {
-                    Log.d("out", "Found next")
-                    Log.d("out", productList.size.toString())
                     pageNumber++
                 }
                 else {
-                    Log.d("out", productList.size.toString())
                     productList.sortByDescending {
                         it.rating
                     }
 
                     var prodCount = 0
                     var i = 0
+
+                    // Add product to database if it meets price range
                     while(prodCount < 10 ){
                         val product = productList[i].price.substring(1, productList[i].price.lastIndex)
                         if(product.toDouble() > minPrice && product.toDouble() < maxPrice) {
@@ -126,6 +127,7 @@ open class ScrapingFragment: Fragment() {
                             i++
                     }
 
+                    // Hide progress bar
                     doAsync {
                         uiThread {
                             (activity as MainActivity).toggleProgressBar(false)
@@ -139,10 +141,11 @@ open class ScrapingFragment: Fragment() {
                 val allInfo = doc.getElementsByClass("item")
 
                 for (i in allInfo) {
-
+                    // Get correct size image to display
                     val highResSrc = i.getElementsByTag("img").attr("src")
                         .replace("small_image/20x", "image")
 
+                    // Parse page for product data and add product object to list to pass to recycler view
                     productList.add(
                         Product(
                             i.getElementsByClass("product-name").text(),
@@ -164,13 +167,11 @@ open class ScrapingFragment: Fragment() {
                     )
                 }
 
+                // If there are more pages to parse, continue loading/scraping pages otherwise sort products collected by rating and send to recycler view
                 if (doc.getElementsByClass("next").isNotEmpty()) {
-                    Log.d("out", "Found next")
-                    Log.d("out", productList.size.toString())
                     pageNumber++
                 }
                 else {
-                    Log.d("out", productList.size.toString())
                     productList = productList.distinct().toMutableList()
                     productList.sortByDescending {
                         it.rating
@@ -178,6 +179,7 @@ open class ScrapingFragment: Fragment() {
 
                     var prodCount = 0
                     var i = 0
+                    // Add product to database if it meets price range
                     while(prodCount < 10 ){
                         val product = productList[i].price.substring(1, productList[i].price.lastIndex)
                         if(product.toDouble() > minPrice && product.toDouble() < maxPrice) {
@@ -189,6 +191,7 @@ open class ScrapingFragment: Fragment() {
                             i++
                     }
 
+                    // Hide progress bar
                     doAsync {
                         uiThread {
                             (activity as MainActivity).toggleProgressBar(false)
@@ -204,6 +207,7 @@ open class ScrapingFragment: Fragment() {
 
                 for (i in allInfo) {
                     Log.d("out", "item ${i.elementSiblingIndex()}")
+                    // Parse page for product data and add product object to list to pass to recycler view
                     productList.add(
                         Product(
                             i.getElementsByClass("productitem--title").text(),
@@ -228,9 +232,8 @@ open class ScrapingFragment: Fragment() {
 
                 }
 
+                // If there are more pages to parse, continue loading/scraping pages otherwise sort products collected by rating and send to recycler view
                 if (doc.getElementsByClass("pagination--next").isNotEmpty()) {
-                    Log.d("out", "Found next")
-                    Log.d("out", productList.size.toString())
                     pageNumber++
                 } else {
                     Log.d("out", productList.size.toString())
@@ -239,6 +242,7 @@ open class ScrapingFragment: Fragment() {
 
                     var prodCount = 0
                     var i = 0
+                    // Add product to database if it meets price range
                     while(prodCount < 10 ){
                         val product = productList[i].price.substring(1, productList[i].price.lastIndex)
                         if(product.toDouble() > minPrice && product.toDouble() < maxPrice) {
@@ -250,6 +254,7 @@ open class ScrapingFragment: Fragment() {
                             i++
                     }
 
+                    // Hide progress bar
                     doAsync {
                         uiThread {
                             (activity as MainActivity).toggleProgressBar(false)
@@ -260,10 +265,14 @@ open class ScrapingFragment: Fragment() {
         }
     }
 
+
+    // Manages scraping and recycler view loading of product type passed in
     @SuppressLint("SetJavaScriptEnabled")
     fun getProducts(productType: String, recyclerView: RecyclerView, site: String){
 
         mFilterViewModel = ViewModelProvider(activity as MainActivity).get(FilterViewModel::class.java)
+
+        // Set background based on site selected
         when(site){
             "Pyro Drone" -> doAsync {
                 uiThread {
@@ -289,11 +298,11 @@ open class ScrapingFragment: Fragment() {
         productList.clear()
 
         website = site
-        Log.d("out", website)
         prodType = productType
         recycView = recyclerView
         mProductViewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
 
+        // Setup webview for scraping javascript data
         browser = WebView(requireContext())
         browser.apply {
             visibility = View.INVISIBLE
@@ -314,22 +323,19 @@ open class ScrapingFragment: Fragment() {
         browser.webViewClient = object: WebViewClient() {
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                Log.d("out", "Starting page")
                 (activity as MainActivity).setProgressText("Loading page $prevPage...")
                 super.onPageStarted(view, url, favicon)
             }
 
+
+            // Scrape all pages of product type pulling top 10 rated items
             @RequiresApi(Build.VERSION_CODES.KITKAT)
             override fun onPageFinished(view: WebView?, url: String?) {
-//                browser.loadUrl("javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
-//                Log.d("out", "page loaded")
 
                 browser.evaluateJavascript("javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');",null)
-                Log.d("out", "page loaded")
 
                 if(pageNumber > prevPage) {
                     prevPage++
-                    Log.d("out", "Loading page $pageNumber")
                     when(site) {
                         "Pyro Drone" -> browser.loadUrl ("https://pyrodrone.com/collections/$productType?page=$pageNumber")
                         "GetFpv" -> browser.loadUrl ("https://www.getfpv.com/$productType.html?limit=100&p=$pageNumber")
@@ -340,6 +346,7 @@ open class ScrapingFragment: Fragment() {
             }
         }
 
+        // Rescrape pages if user selects new range of price
         mFilterViewModel.change.observe(viewLifecycleOwner, {
             if(it) {
                 productList = mutableListOf()
@@ -366,7 +373,6 @@ open class ScrapingFragment: Fragment() {
                     "GetFpv" -> browser.loadUrl ("https://www.getfpv.com/$productType.html?limit=100&p=1")
                     "RaceDayQuads" -> browser.loadUrl("https://www.racedayquads.com/collections/$productType?page=1&sort_by=best-selling")
                 }
-                Log.d("out", "Loading Url from getProduct observer $prevPage $pageNumber")
                 (activity as MainActivity).setProgressText("Loading page $prevPage")
             }
             else
@@ -381,9 +387,10 @@ open class ScrapingFragment: Fragment() {
                     lateinit var  productRecyclerViewAdapter: RecyclerViewAdapter
                     lateinit var productLinearLayoutManager: LinearLayoutManager
 
+                    // Setup recycler view based on orientation of device
                     when(resources.configuration.orientation) {
                         Configuration.ORIENTATION_LANDSCAPE -> {
-                            productRecyclerViewAdapter = RecyclerViewAdapter(mProductViewModel)
+                            productRecyclerViewAdapter = RecyclerViewAdapter(false)
                             productLinearLayoutManager = LinearLayoutManager(
                                 activity,
                                 LinearLayoutManager.HORIZONTAL,
@@ -391,7 +398,7 @@ open class ScrapingFragment: Fragment() {
                             )
                         }
                         Configuration.ORIENTATION_PORTRAIT -> {
-                            productRecyclerViewAdapter = RecyclerViewAdapter(mProductViewModel)
+                            productRecyclerViewAdapter = RecyclerViewAdapter(false)
                             productLinearLayoutManager = LinearLayoutManager(
                                 activity,
                                 LinearLayoutManager.VERTICAL,
@@ -413,12 +420,14 @@ open class ScrapingFragment: Fragment() {
         }
     }
 
+    // Show refresh button in app bar
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.refresh).isVisible = true
         super.onPrepareOptionsMenu(menu)
     }
 
 
+    // Rescrape for data if refresh button is pressed
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
             R.id.refresh -> {

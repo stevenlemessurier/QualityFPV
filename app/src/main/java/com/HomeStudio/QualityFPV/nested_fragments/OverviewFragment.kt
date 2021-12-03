@@ -1,8 +1,6 @@
 package com.HomeStudio.QualityFPV.nested_fragments
 
-import android.animation.LayoutTransition
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -13,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -21,25 +18,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.HomeStudio.QualityFPV.R
 import com.HomeStudio.QualityFPV.adapters.DescriptionImageAdapter
 import com.HomeStudio.QualityFPV.adapters.DetailImageAdapter
-import com.HomeStudio.QualityFPV.data.Product
+import com.HomeStudio.QualityFPV.data.product.Product
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.android.synthetic.main.fragment_overview.*
-import kotlinx.android.synthetic.main.fragment_product.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 
+// Fragment to display details of product once selected from a main product type fragment
 class OverviewFragment: Fragment() {
 
     private lateinit var product: Product
     var isIntent = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
+        // Retrieve product data passed in or saved on orientation change
         if (savedInstanceState != null)
             product = savedInstanceState.getParcelable<Product>("productData") as Product
         else {
@@ -48,6 +46,7 @@ class OverviewFragment: Fragment() {
                 product = bundle.getParcelable<Product>("productData") as Product
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +65,7 @@ class OverviewFragment: Fragment() {
         val nextButton = root.findViewById<ImageButton>(R.id.next_button)
         val fab = root.findViewById<FloatingActionButton>(R.id.product_fab)
 
+        // Open product page in device browser
         fab.setOnClickListener {
             goToUrl(product.url)
         }
@@ -79,11 +79,14 @@ class OverviewFragment: Fragment() {
 
             val doc = Jsoup.connect(product.url).get()
 
+            // Scrape product page by website
             when(product.website) {
 
                 "Pyro Drone" -> {
 
                     val all = doc.getElementsByClass("product-description")[0].select("p, li, h2, h3")
+
+                    // Get description of product
                     htmlDetails = parseDetails(all)
                     if (all.isEmpty()) {
                         val newAll = doc.getElementsByClass("product-description")[0].html()
@@ -91,10 +94,12 @@ class OverviewFragment: Fragment() {
                         htmlDetails = Html.fromHtml(newAll).toString()
                     }
 
+                    // Get images in the description of the product
                     val descripImages = doc.getElementById("tab1").getElementsByTag("img")
                     for (image in descripImages)
                         descriptionImages.add(image.attr("src").toString())
 
+                    // Get product images
                     detailImages = doc.getElementsByClass("text-link")
                     for (img in detailImages)
                         imgList.add("https:${img.attr("href")}")
@@ -108,29 +113,35 @@ class OverviewFragment: Fragment() {
 
                 "GetFpv" -> {
 
+                    // Get description of product
                     val all = doc.getElementsByClass("std")[1].select("p, li, h2, h3")
                     htmlDetails = parseDetails(all)
 
-                    val descripImages =
-                        doc.getElementById("collateral-tabs").getElementsByTag("img")
+                    // Get images in the description of the product
+                    val descripImages = doc.getElementById("collateral-tabs").getElementsByTag("img")
                     for (image in descripImages) {
                         descriptionImages.add(image.attr("src").toString())
                     }
 
+                    // Get images of product
                     detailImages = doc.getElementsByClass("thumb-link")
                     for (img in detailImages)
                         imgList.add(img.attr("href"))
                 }
 
                 "RaceDayQuads" -> {
+
+                    // Get description of product
                     val all = doc.getElementById("tabs-2").select("p, span, li, h3, h2")
                     htmlDetails = parseDetails(all)
 
+                    // Get images in the description of the product
                     val descripImages = doc.getElementById("tabs-2").getElementsByTag("img")
                     for (image in descripImages) {
                         descriptionImages.add(image.attr("src").toString())
                     }
 
+                    // Get images of product
                     val detailIm = doc.getElementsByClass("product-gallery--thumbnail-trigger")
                     for (img in detailIm) {
                         imgList.add(
@@ -143,12 +154,10 @@ class OverviewFragment: Fragment() {
                 }
             }
 
-//            val cost = "$" + doc.getElementsByAttributeValue(
-//                "property",
-//                "og:price:amount"
-//            )[0].attr("content").toString()
 
             uiThread {
+
+                // Set description, description images, and product images to recycler views
                 productName.text = product.name
                 if (htmlDetails.isEmpty())
                     productDetails.text = "No Description"
@@ -235,16 +244,22 @@ class OverviewFragment: Fragment() {
         return root
     }
 
+
+    // Save state data on orientation change
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable("productData", product)
         super.onSaveInstanceState(outState)
     }
 
+
+    // Hides the refresh button in the app bar
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.refresh).isVisible = false
         super.onPrepareOptionsMenu(menu)
     }
 
+
+    // Sends user to product page in device browser
     private fun goToUrl(url: String) {
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
@@ -252,6 +267,7 @@ class OverviewFragment: Fragment() {
         startActivity(i)
         isIntent = false
     }
+
 
     // Takes in elements to parse and returns a formatted description of the item
     private fun parseDetails(elements: Elements): String {

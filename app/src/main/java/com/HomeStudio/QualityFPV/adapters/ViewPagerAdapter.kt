@@ -5,14 +5,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.HomeStudio.QualityFPV.data.Product
+import com.HomeStudio.QualityFPV.data.product.Product
 import com.HomeStudio.QualityFPV.nested_fragments.OverviewFragment
 import com.HomeStudio.QualityFPV.nested_fragments.ReviewsFragment
 import com.HomeStudio.QualityFPV.nested_fragments.VideoFragment
 
-// This class is the adapter for the search fragment to create and display web fragments through the viewpager
+// The view pager adapter for the product fragment that handles the position of the overview, review, and video fragment
+// of a specific product
 class ViewPagerAdapter(
-    private val fragmentManager: FragmentManager,
+    fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
     val product: Product
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -45,9 +46,5 @@ class ViewPagerAdapter(
                 OverviewFragment()
             }
         }
-    }
-
-    fun getCurrentFragment(position: Int): Fragment {
-        return fragmentManager.fragments[position]
     }
 }

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".nav_drawer.motor.MotorFragment">
+    tools:context=".nav_drawer.MotorFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_flight_motor"
