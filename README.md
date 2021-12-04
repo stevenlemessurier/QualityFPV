@@ -9,6 +9,7 @@ of if you know what's the best buy.
 ## Features
 
 ### Biggest FPV Websites
+![Site Selection](preview/ezgif.com-gif-maker (3).gif)
 
 
 ## Tools & Open Source Libraries
