@@ -1,5 +1,6 @@
 # QualityFPV
 Independent Study project for my senior year of my CS degree
+![Banner](previews/QualityFpvBanner.png)
 
 ## Description
 This app is for all the fpv enthusiasts from beginner to simply pilots that just want to keep up to date on the best products. Users
